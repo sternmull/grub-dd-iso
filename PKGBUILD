@@ -21,7 +21,7 @@ _pkgname="grub"
 pkgname="${_pkgname}-git"
 
 pkgdesc="GNU GRand Unified Bootloader (2) - GIT Version"
-pkgver=2.02.beta2.428.g697ecef
+pkgver=2.02.tb
 pkgrel=1
 url="https://www.gnu.org/software/grub/"
 arch=('x86_64' 'i686')
@@ -50,7 +50,7 @@ if [[ "${_GRUB_EMU_BUILD}" == "1" ]]; then
                  'sdl: For grub-emu SDL support')
 fi
 
-source=("grub::git+git://git.sv.gnu.org/grub.git#branch=master"
+source=("grub::git+https://github.com/sternmull/grub-dd.git#branch=master"
         "grub-extras::git+git://git.sv.gnu.org/grub-extras.git#branch=master"
         "http://ftp.gnu.org/gnu/unifont/unifont-${_UNIFONT_VER}/unifont-${_UNIFONT_VER}.bdf.gz"
         "http://ftp.gnu.org/gnu/unifont/unifont-${_UNIFONT_VER}/unifont-${_UNIFONT_VER}.bdf.gz.sig"
@@ -71,11 +71,6 @@ sha1sums=('SKIP'
           '5b7fcb0718a23035c039eb2fda9e088bb13ae611')
 
 validpgpkeys=('95D2E9AB8740D8046387FD151A09227B1F435A33') ## Paul Hardy - for unifont
-
-pkgver() {
-	cd "${srcdir}/grub/"
-	echo "$(git describe --tags)" | sed -e 's|grub.||g' -e 's|-|\.|g'
-}
 
 prepare() {
 	
