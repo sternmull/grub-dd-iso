@@ -5,3 +5,8 @@ pkg/
 *.tar.gz
 *.sig
 *.log*
+archiso/work/
+archiso/out/
+grub-extras/
+grub/
+*.gz
