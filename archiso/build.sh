@@ -2,8 +2,8 @@
 
 set -e -u
 
-iso_name=archlinux
-iso_label="ARCH_$(date +%Y%m)"
+iso_name=arch-grub-dd
+iso_label="ARCH_GRUB_DD_$(date +%Y%m)"
 iso_version=$(date +%Y.%m.%d)
 install_dir=arch
 work_dir=work
@@ -92,6 +92,12 @@ make_customize_airootfs() {
 
     setarch ${arch} mkarchiso ${verbose} -w "${work_dir}/${arch}" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r '/root/customize_airootfs.sh' run
     rm ${work_dir}/${arch}/airootfs/root/customize_airootfs.sh
+
+    echo '------------------------------------------------------'
+    echo '------- replacing grub with customized package -------'
+    echo '------------------------------------------------------'
+    setarch ${arch} pacman --noconfirm -r ${work_dir}/${arch}/airootfs -R grub
+    setarch ${arch} pacman --noconfirm -r ${work_dir}/${arch}/airootfs -U  ${script_path}/../grub-git-2.02.tb-1-${arch}.pkg.tar.xz
 }
 
 # Prepare kernel/initramfs ${install_dir}/boot/
