@@ -1,0 +1,10 @@
+Builds an Arch Linux ISO that has a modified Grub with a "dd" command that
+can be used to restore disks from images during the boot process.
+
+Builds only in an Arch Linux environment.
+
+Build instructions:
+ - cd into the directory this file is in
+ - run as user: ./build-grub-package.sh
+ - run as root: ./build-iso.sh
+ - use ISO in archiso/out to have "dd" in grub
