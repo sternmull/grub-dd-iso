@@ -1,0 +1,67 @@
+grub-dd
+=======
+This ISO contains a version of grub that was extended with a "dd" command that
+can write data from raw images (as created by "dd") and ntfs-images (as
+created by "ntfsclone --save-image") to the disk.
+
+Grub transparently recognizes and decrompresses .gz and .xz archives. For
+.xz it must be compressed with "--check=crc32".
+
+!!! CAUTION! Writing to the wrong device will wipe out your data! !!!
+
+Typical steps:
+==============
+
+Load your keyboard layout:
+
+ loadkeys de
+
+List information about the disks:
+
+ lsblk
+
+Prepare partition table with "cfcidsk" or any other partitioning tool.
+
+Create filesystem for images (assuming it will be on /dev/sda2):
+
+ mkfs.ext2 -L images /dev/sda2
+
+or if a windows installation should have access to it:
+
+ mkfs.ntfs -f -L images /dev/sda2
+
+Install grub on /dev/sda and store its configuration files on /dev/sda2:
+
+ mount /dev/sda2 /mnt
+ grub-install --boot-directory /mnt/boot /dev/sda
+
+Edit /mnt/boot/grub/grub.cfg to boot a windows installation on the first
+partition of the first disk (use "nano" as editor if you have no other
+preference). See "grub.cfg.sample" for an example.
+
+For details see "info grub" -> Configuration -> Multi-boot manual config.
+
+
+Restoring a NTFS partition from an image before it gets booted
+==============================================================
+
+This exmaple makes the following assumtions:
+ - the NTFS partition in question is the first one on the
+   first disk ("(hd0,msdos1)" for grub, "/dev/sda1" for linux).
+ - images are stored on the second partition ("(hd0,msdos2)" for grub,
+   "/dev/sda2" for linux).
+
+Create images of a ntfs partition:
+
+ mount /dev/sda2 /mnt
+ ntfsclone --save-image -o - /dev/sda1 | gzip -c > /mnt/my.ntfsclone.gz
+
+!!! CAUTION! Be careful! Be sure to use the correct target partition!
+    Any mistake might wipe out your disk!
+
+To restore an image to the first partition of the first disk on boot insert
+the following line int to the menuentry:
+
+ dd --ntfs (hd0,msdos2)/my.ntfsclone.gz (hd0,msdos1)
+
+See "grub.cfg.sample" for an example.

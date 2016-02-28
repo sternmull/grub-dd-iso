@@ -1,0 +1,18 @@
+# Example configuration for grub that uses the "dd" command
+# to reset a windows partition on boot.
+
+# Reinitializes the Windows partition on boot.
+menuentry "Windows (restored from image)" {
+  insmod ntfs
+  echo "Restoring Windows partition from image..."
+  dd --ntfs (hd0,msdos2)/image.ntfs.gz (hd0,msdos1)
+  set root=(hd0,msdos1)
+  ntldr /ntldr
+}
+
+# Boots the Windows partition as it is.
+menuentry "Windows" {
+  insmod ntfs
+  set root=(hd0,msdos1)
+  ntldr /ntldr
+}
